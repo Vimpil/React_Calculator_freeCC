@@ -2,3 +2,33 @@
   font-family: sans-serif;
   text-align: center;
 }
+
+.button {
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  background: burlywood;
+  padding-top: 7px;
+  cursor: pointer;
+  border: 1px solid bisque;
+}
+
+.button:hover {
+  background: wheat;
+}
+
+.pad-bank {
+  display: block;
+  width: 180px;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+#display {
+  display: block;
+  width: 180px;
+  margin: 0 auto;
+  background-color: wheat;
+  height: 30px;
+  padding-top: 10px;
+}
