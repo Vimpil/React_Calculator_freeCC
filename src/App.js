@@ -101,17 +101,12 @@ const numPadBtns = [
   }
 ];
 
-class CalculatorInterface extends React.Component {
+class CalcButton extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      operation: "",
-      prev_num: 0,
-      prev_operat_res: 0
-    };
+    this.state = {};
     // this.result = this.result.bind(this);
     // this.printOperation = this.printOperation.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
     this.buttonClick = this.buttonClick.bind(this);
     this.clearDisplay = this.clearDisplay.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
@@ -130,25 +125,27 @@ class CalculatorInterface extends React.Component {
   }
 
   clearDisplay() {
-    this.setState({
-      operation: "",
-      prev_num: 0,
-      prev_operat_res: 0
-    });
-
+    this.props.updateOperation("");
+    // this.props.updatePrevNum('0');
+    // this.props.updatePrevOperatRes('*');
     this.props.updateDisplay("0");
   }
 
   addDisplay(add) {
-    console.log("**addDisplay**");
+    if (this.props.operation === "=") {
+      this.clearDisplay();
+    }
 
-    console.log("--MAIN PARAMS--");
+    // console.log("**addDisplay**");
 
-    console.log(/\D$/.test(this.props.display));
+    // console.log("--MAIN PARAMS--");
 
-    console.log("--END MAIN PARAMS--");
+    // console.log(/\D$/.test(this.props.display));
 
-    console.log("add" + typeof add);
+    // console.log("--END MAIN PARAMS--");
+
+    // console.log("add" + typeof add);
+    // // if(this.props.prev)
 
     if (
       (this.props.display.length === 1 &&
@@ -156,168 +153,208 @@ class CalculatorInterface extends React.Component {
       (/\D$/.test(this.props.display) && !(add > -1)) ||
       (this.props.display.length === 1 && /\D$/.test(this.props.display))
     ) {
-      console.log("addDisplay #1__");
-      console.log("-small PARAMS-");
+      //   console.log("addDisplay #1__");
+      //   console.log("-small PARAMS-");
 
-      console.log("add > -1:");
-      console.log(add > -1);
+      //   console.log("add > -1:");
+      //   console.log(add > -1);
 
-      console.log("-end small PARAMS-");
+      //   console.log("-end small PARAMS-");
 
       const regex = /0?$|\D$/;
-      console.log("this.props.display" + this.props.display);
-      console.log("add" + add);
-      console.log("typeof add" + typeof add);
-      console.log(this.props.display.match(/\d+$|\D$/));
+      //   console.log("this.props.display" + this.props.display);
+      //   console.log("add" + add);
+      //   console.log("typeof add" + typeof add);
+      //   console.log(this.props.display.match(/\d+$|\D$/));
 
-      // if(/\D$/.test(this.props.display)){
-      console.log("addDisplay #1 1) NOT num__");
+      //   console.log("addDisplay #1 1) NOT num__");
+
       this.props.updateDisplay(this.props.display.replace(regex, add));
-      // }
-      // else{
-      //   console.log('addDisplay #1 1) num__');
-      //   this.props.updateDisplay(this.props.display.concat(add));
-      // }
     } else {
-      //
-      console.log("addDisplay #2__");
+      //   //
+      //   console.log("addDisplay #2__");
       var lastNumberRegex = /\d+$/;
       var match = lastNumberRegex.exec(this.props.display);
+      console.log("match +++++++++ " + match);
 
-      this.props.updateDisplay(this.props.display.concat(add));
-    }
-
-    console.log("this.state.operation: " + this.state.operation);
-
-    console.log("this.state.prev_operation_res: " + this.state.operation_res);
-  }
-
-  getResult() {
-    console.log("******getResult******");
-
-    let getLastNum = /\d+$/.exec(this.props.display);
-
-    console.log("--MAIN PARAMS--");
-
-    console.log("getLastNum:" + getLastNum);
-    console.log(
-      "this.state.prev_num.toString():" + this.state.prev_num.toString()
-    );
-
-    console.log("this.state.operation" + this.state.operation);
-
-    console.log("--END MAIN PARAMS--");
-
-    let comboString = this.state.prev_num
-      .toString()
-      .concat(this.state.operation)
-      .concat(getLastNum);
-
-    let operat_res = eval(comboString[0] + comboString[1] + comboString[2]);
-
-    console.log("eval: " + operat_res);
-
-    this.addDisplay("= " + operat_res.toString());
-
-    console.log("this.state.operation: " + this.state.operation);
-
-    console.log("this.state.operation_res: " + this.state.operation_res);
-
-    console.log("******END getResult******");
-  }
-
-  addOperation(value) {
-    console.log("**addOperation**");
-
-    console.log("--MAIN PARAMS--");
-
-    console.log("this.state.operation" + this.state.operation);
-    console.log("this.state.prev_num" + this.state.prev_num);
-
-    console.log("--END MAIN PARAMS--");
-
-    // if prev OPER not EMPTY ELSE change cur op || COUNTING MATH OP BEFORE CURRENT OPERATION
-
-    console.log("__addOperation #1__");
-    console.log("this.state.display: " + this.state.display);
-
-    if (this.state.operation !== "" && this.state.prev_num !== null) {
-      console.log("__addOperation #1 1)__");
-
-      let getLastNum = /\d+$/.exec(this.props.display);
-
-      let comboString = this.state.prev_num
-        .toString()
-        .concat(this.state.operation)
-        .concat(getLastNum);
-
-      let operat_res = eval(comboString[0] + comboString[1] + comboString[2]);
-
-      this.setState(
-        {
-          prev_operat_res: operat_res
-        },
-        function() {}
-      );
-
-      this.addDisplay(value);
-    } else {
-      console.log("__addOperation #1 2)__");
-
-      // if no prev operation make prev num in state
-
-      let getPrevNum = /\d+$/.exec(this.props.display);
-
-      this.setState(
-        {
-          prev_num: getPrevNum
-        },
-        function() {}
-      );
-
-      this.addDisplay(value);
-    }
-
-    console.log("__addOperation #2__");
-    console.log("this.state.display: " + this.state.display);
-
-    // if cur is not NUMBER ( OPERATION )
-
-    if (value !== "=" && value !== "") {
-      if (/\D$/.test(this.props.display)) {
-        console.log("__addOperation ##1 - __");
-        this.setState(
-          {
-            operation: value
-          },
-
-          function() {
-            console.log("value: " + value);
-
-            this.props.updateDisplay(
-              this.props.display.replace(/\D$|0$/, value)
-            );
-            console.log("this.state.operation" + this.state.operation);
-          }
-        );
+      var lastZero = /0$/.exec(this.props.display);
+      if (lastZero) {
+        console.log("lastZero");
+        console.log("match.length" + match.toString().length);
+        if (match.toString().length === 1) {
+          console.log("0000000000000");
+          this.props.updateDisplay(this.props.display.replace(/0$/, add));
+        } else {
+          console.log("NOT 0000000000000");
+          this.props.updateDisplay(this.props.display.concat(add));
+        }
       } else {
-        console.log("__addOperation ##2 - __");
-
-        this.setState(
-          {
-            operation: value
-          },
-          function() {
-            console.log("value: " + value);
-            console.log("this.state.operation" + this.state.operation);
-          }
-        );
+        console.log("NOT 0000000000000");
+        this.props.updateDisplay(this.props.display.concat(add));
       }
     }
 
-    console.log("this.state.operation: " + this.state.operation);
+    // this.props.updateDisplay(this.props.display.concat(add));
 
-    console.log("this.state.operation_res: " + this.state.operation_res);
+    // console.log("this.state.operation: " + this.props.operation);
+
+    // console.log("this.props.prev_operation_res: " + this.props.prev_operation_result);
+  }
+
+  getResult() {
+    //     console.log("******getResult******");
+
+    //     let getLastNum = /\d+$/.exec(this.props.display);
+
+    //     console.log("--MAIN PARAMS--");
+
+    //     console.log("getLastNum:" + getLastNum);
+
+    // if(this.props.prev_num===null){
+    //   this.props.updatePrevNum('0');
+    // }
+
+    //     console.log("this.props.prev_operation_res==='*'"+(this.props.prev_operation_res==='*'));
+
+    // if(this.props.prev_operation_res==='*'){
+    //   this.props.updatePrevOperatRes(this.props.prev_num);
+    // };
+
+    // console.log("this.props.prev_num.toString():" + this.props.prev_num.toString());
+
+    //   console.log("this.props.operation" + this.props.operation);
+    //   console.log("this.props.prev_operation_res" + this.props.prev_operation_res);
+
+    //   console.log("--END MAIN PARAMS--");
+
+    // let comboString = [getLastNum.toString() ,this.props.operation.toString(), this.props.prev_operation_res.toString()];
+
+    //   console.log('++++ comboString ++++'+comboString);
+
+    //   let operat_res = eval(comboString[0] + comboString[1] + comboString[2]);
+
+    //   console.log("eval: " + operat_res);
+    //   this.clearDisplay();
+    //   this.addDisplay(operat_res.toString());
+
+    //   if(this.props.display.toString()==="Infinity"){
+    // console.log('INDITINI 2++++++++++++++++++++++++++++++++++++');
+    //     this.clearDisplay();
+    //   }
+    //   this.props.updatePrevNum(this.props.display);
+    //   this.props.updateOperation('=');
+
+    //   console.log("this.props.operation: " + this.props.operation);
+
+    //   console.log("this.state.operation_res: " + this.state.operation_res);
+
+    //   console.log("******END getResult******");
+
+    let comboString = this.props.display;
+
+    this.clearDisplay();
+
+    try {
+      this.props.updateDisplay(math.evaluate(comboString));
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  addOperation(value) {
+    // if(this.props.display.toString()==="Infinity"){
+    //   console.log('INDITINI ++++++++++++++++++++++++++++++++++++');
+    //       this.clearDisplay();
+    //     }
+
+    //      if(this.props.operation === '='){
+
+    //       this.props.updateOperation('');
+
+    //     }
+
+    //     console.log("**addOperation**");
+
+    //     console.log("--MAIN PARAMS--");
+
+    //     console.log("this.props.operation" + this.props.operation);
+    //     console.log("this.props.prev_num" + this.props.prev_num);
+
+    //     console.log("--END MAIN PARAMS--");
+
+    //     // if prev OPER not EMPTY ELSE change cur op || COUNTING MATH OP BEFORE CURRENT OPERATION
+
+    //     console.log("__addOperation #1__");
+
+    //     if (this.props.operation !== "" && this.props.prev_num !== null) {
+    //       console.log("__addOperation #1 1)__");
+
+    //       let getLastNum = /\d+$/.exec(this.props.display);
+
+    //       if (this.props.prev_operation_res!=='*'){
+
+    //         let comboString = [this.props.prev_operation_res.toString(),this.props.operation, getLastNum];
+
+    //         let operat_res = eval(comboString[0] + comboString[1] + comboString[2]);
+
+    //         this.props.updatePrevOperatRes(operat_res);
+
+    //         this.props.updatePrevNum(getLastNum);
+
+    //         this.addDisplay(value);
+
+    //       }else{
+
+    //         let comboString = [this.props.prev_num.toString(),this.props.operation, getLastNum];
+
+    //         let operat_res = eval(comboString[0] + comboString[1] + comboString[2]);
+
+    //         this.props.updatePrevOperatRes(operat_res);
+
+    //         this.props.updatePrevNum(getLastNum);
+
+    //         this.addDisplay(value);
+
+    //       }
+
+    //     } else {
+    //       console.log("__addOperation #1 2)__");
+
+    //       // if no prev operation make prev num in state
+
+    //       let getPrevNum = /\d+$/.exec(this.props.display);
+
+    //       this.props.updatePrevNum(getPrevNum);
+
+    //       this.addDisplay(value);
+    //     }
+
+    //     console.log("__addOperation #2__");
+
+    //     // if cur is not NUMBER ( OPERATION )
+
+    //     if (value !== "") {
+    //       if (/\D$/.test(this.props.display)) {
+    //         console.log("__addOperation ##1 - __");
+
+    //         this.props.updateOperation(value);
+
+    //         this.props.updateDisplay(
+    //           this.props.display.replace(/\D$|0$/, value)
+    //         );
+    //       } else {
+    //         console.log("__addOperation ##2 - __");
+
+    //         this.props.updateOperation(value);
+
+    //       }
+    //     }
+
+    //     console.log("this.props.operation: " + this.props.operation);
+
+    //     console.log("this.state.operation_res: " + this.state.operation_res);
+
+    this.props.updateDisplay(this.props.display + value);
   }
 
   buttonClick() {
@@ -325,7 +362,7 @@ class CalculatorInterface extends React.Component {
 
     console.log("--MAIN PARAMS--");
 
-    console.log("this.state.operation" + this.state.operation);
+    console.log("this.props.operation" + this.props.operation);
 
     console.log("--END MAIN PARAMS--");
 
@@ -374,7 +411,7 @@ class CalculatorInterface extends React.Component {
       }
     }
 
-    console.log("this.state.operation: " + this.state.operation);
+    console.log("this.props.operation: " + this.props.operation);
 
     console.log("this.state.operation_res: " + this.state.operation_res);
   }
@@ -393,11 +430,17 @@ class Calculator extends React.Component {
     let Calculator;
     Calculator = numPadBtns.map((drumObj, i, CalculatorArr) => {
       return (
-        <CalculatorInterface
+        <CalcButton
+          display={this.props.display}
+          prev_num={this.props.prev_num}
+          operation={this.props.operation}
+          prev_operation_res={this.props.prev_operation_res}
+          updateDisplay={this.props.updateDisplay}
+          updatePrevNum={this.props.updatePrevNum}
+          updateOperation={this.props.updateOperation}
+          updatePrevOperatRes={this.props.updatePrevOperatRes}
           keyTrigger={CalculatorArr[i].keyTrigger}
           keyCode={CalculatorArr[i].keyCode}
-          updateDisplay={this.props.updateDisplay}
-          display={this.props.display}
         />
       );
     });
@@ -410,10 +453,28 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      display: String.fromCharCode(48)
+      display: String.fromCharCode(48),
+      prev_num: 0,
+      prev_operation_res: "*",
+      operation: ""
     };
 
+    this.updatePrevNum = this.updatePrevNum.bind(this);
     this.updateDisplay = this.updateDisplay.bind(this);
+    this.updateOperation = this.updateOperation.bind(this);
+    this.updatePrevOperatRes = this.updatePrevOperatRes.bind(this);
+  }
+
+  updatePrevOperatRes(prev_op_value) {
+    this.setState({
+      prev_operation_res: prev_op_value
+    });
+  }
+
+  updatePrevNum(prev_value) {
+    this.setState({
+      prev_num: prev_value
+    });
   }
 
   updateDisplay(name) {
@@ -422,12 +483,24 @@ export default class App extends React.Component {
     });
   }
 
+  updateOperation(value) {
+    this.setState({
+      operation: value
+    });
+  }
+
   render() {
     return (
       <div className="App">
         <Calculator
-          updateDisplay={this.updateDisplay}
           display={this.state.display}
+          prev_num={this.state.prev_num}
+          operation={this.state.operation}
+          prev_operation_res={this.state.prev_operation_res}
+          updateOperation={this.updateOperation}
+          updateDisplay={this.updateDisplay}
+          updatePrevNum={this.updatePrevNum}
+          updatePrevOperatRes={this.updatePrevOperatRes}
         />
         <p id="display">{this.state.display}</p>
       </div>
